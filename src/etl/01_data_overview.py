@@ -1,49 +1,109 @@
 from pathlib import Path
 import pandas as pd
 
-# ----------------------------
-# Project Paths
-# ----------------------------
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DATA_PATH = PROJECT_ROOT / "data" / "raw"
+RAW_DATA_DIR = PROJECT_ROOT / "data" / "raw"
+REPORTS_DIR = PROJECT_ROOT / "reports"
+REPORT_PATH = REPORTS_DIR / "Data_Quality_Report.md"
 
-# ----------------------------
-# Files
-# ----------------------------
 
-calendar = pd.read_csv(DATA_PATH / "calendar.csv")
-sales = pd.read_csv(DATA_PATH / "sales_train_validation.csv")
-prices = pd.read_csv(DATA_PATH / "sell_prices.csv")
+def load_datasets() -> dict[str, pd.DataFrame]:
+    """Load the main RetailIQ datasets from the raw data folder."""
+    return {
+        "Calendar": pd.read_csv(RAW_DATA_DIR / "calendar.csv"),
+        "Sales Validation": pd.read_csv(
+            RAW_DATA_DIR / "sales_train_validation.csv"
+        ),
+        "Sell Prices": pd.read_csv(RAW_DATA_DIR / "sell_prices.csv"),
+    }
 
-datasets = {
-    "Calendar": calendar,
-    "Sales": sales,
-    "Prices": prices
-}
 
-print("=" * 60)
-print("RETAILIQ DATA OVERVIEW")
-print("=" * 60)
+def create_dataset_profile(
+    name: str,
+    dataframe: pd.DataFrame,
+) -> str:
+    """Create a Markdown profile for one dataset."""
+    row_count, column_count = dataframe.shape
+    duplicate_count = int(dataframe.duplicated().sum())
+    memory_mb = dataframe.memory_usage(deep=True).sum() / 1024**2
 
-for name, df in datasets.items():
+    profile_lines = [
+        f"## {name}",
+        "",
+        "### Dataset Summary",
+        "",
+        f"- Rows: {row_count:,}",
+        f"- Columns: {column_count:,}",
+        f"- Duplicate rows: {duplicate_count:,}",
+        f"- Memory usage: {memory_mb:,.2f} MB",
+        "",
+        "### Column Profile",
+        "",
+        "| Column | Data Type | Missing Values | Missing % | Unique Values |",
+        "|---|---:|---:|---:|---:|",
+    ]
 
-    print(f"\n{name}")
-    print("-" * 60)
+    for column in dataframe.columns:
+        missing_count = int(dataframe[column].isna().sum())
+        missing_percentage = (
+            missing_count / row_count * 100 if row_count else 0
+        )
+        unique_count = int(dataframe[column].nunique(dropna=True))
 
-    print(f"Rows: {df.shape[0]:,}")
-    print(f"Columns: {df.shape[1]}")
+        profile_lines.append(
+            f"| {column} | {dataframe[column].dtype} | "
+            f"{missing_count:,} | {missing_percentage:.2f}% | "
+            f"{unique_count:,} |"
+        )
 
-    print("\nColumn Types")
-    print(df.dtypes)
+    profile_lines.extend(
+        [
+            "",
+            "### First Five Rows",
+            "",
+            dataframe.head().to_markdown(index=False),
+            "",
+            "---",
+            "",
+        ]
+    )
 
-    print("\nMissing Values")
-    print(df.isna().sum())
+    return "\n".join(profile_lines)
 
-    print("\nFirst Five Rows")
-    print(df.head())
 
-    print("\nMemory Usage")
-    print(f"{df.memory_usage(deep=True).sum()/1024**2:.2f} MB")
+def generate_report(datasets: dict[str, pd.DataFrame]) -> None:
+    """Generate and save the complete Markdown profiling report."""
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
-print("\nData profiling complete.")
+    report_sections = [
+        "# RetailIQ Data Quality Report",
+        "",
+        "This report summarizes the structure, completeness, uniqueness, "
+        "and memory usage of the primary raw datasets.",
+        "",
+    ]
+
+    for dataset_name, dataframe in datasets.items():
+        print(f"Profiling {dataset_name}...")
+        report_sections.append(
+            create_dataset_profile(dataset_name, dataframe)
+        )
+
+    REPORT_PATH.write_text(
+        "\n".join(report_sections),
+        encoding="utf-8",
+    )
+
+    print(f"\nReport created successfully:")
+    print(REPORT_PATH)
+
+
+def main() -> None:
+    """Run the RetailIQ data profiling workflow."""
+    datasets = load_datasets()
+    generate_report(datasets)
+
+
+if __name__ == "__main__":
+    main()
