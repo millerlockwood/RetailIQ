@@ -1,8 +1,23 @@
 # RetailIQ Data Quality Report
 
-This report summarizes the structure, completeness, uniqueness, and memory usage of the primary raw datasets.
+This automated report evaluates the structure, completeness, uniqueness, memory usage, and potential preparation needs of the primary raw datasets.
+
+## Executive Summary
+
+| Dataset | Quality Score | Status | Warning Count |
+|---|---:|---|---:|
+| Calendar | 100/100 | Excellent | 0 |
+| Sales Validation | 100/100 | Excellent | 0 |
+| Sell Prices | 100/100 | Excellent | 0 |
+
+> Scores are generated using documented, rule-based checks. They are screening indicators and do not replace analyst review.
 
 ## Calendar
+
+### Dataset Health
+
+- Quality score: **100/100**
+- Status: **Excellent**
 
 ### Dataset Summary
 
@@ -10,6 +25,28 @@ This report summarizes the structure, completeness, uniqueness, and memory usage
 - Columns: 14
 - Duplicate rows: 0
 - Memory usage: 0.67 MB
+
+### Key Findings
+
+- No fully duplicated rows were detected.
+- `event_name_1` is 91.77% null. This is expected because most calendar dates do not contain a special event.
+- `event_type_1` is 91.77% null. This is expected because most calendar dates do not contain a special event.
+- `event_name_2` is 99.75% null. This is expected because most calendar dates do not contain a special event.
+- `event_type_2` is 99.75% null. This is expected because most calendar dates do not contain a special event.
+- No unexpected missing-value issues were identified.
+
+### Potential Issues
+
+- No major data-quality warnings were detected.
+
+### Recommended Actions
+
+- Convert `date` from `str` to datetime.
+- Consider converting `weekday` from `str` to category to reduce memory usage.
+- Consider converting `event_name_1` from `str` to category to reduce memory usage.
+- Consider converting `event_type_1` from `str` to category to reduce memory usage.
+- Consider converting `event_name_2` from `str` to category to reduce memory usage.
+- Consider converting `event_type_2` from `str` to category to reduce memory usage.
 
 ### Column Profile
 
@@ -44,12 +81,34 @@ This report summarizes the structure, completeness, uniqueness, and memory usage
 
 ## Sales Validation
 
+### Dataset Health
+
+- Quality score: **100/100**
+- Status: **Excellent**
+
 ### Dataset Summary
 
 - Rows: 30,490
 - Columns: 1,919
 - Duplicate rows: 0
 - Memory usage: 455.38 MB
+
+### Key Findings
+
+- No fully duplicated rows were detected.
+- No unexpected missing-value issues were identified.
+
+### Potential Issues
+
+- No major data-quality warnings were detected.
+
+### Recommended Actions
+
+- Consider converting `item_id` from `str` to category to reduce memory usage.
+- Consider converting `dept_id` from `str` to category to reduce memory usage.
+- Consider converting `cat_id` from `str` to category to reduce memory usage.
+- Consider converting `store_id` from `str` to category to reduce memory usage.
+- Consider converting `state_id` from `str` to category to reduce memory usage.
 
 ### Column Profile
 
@@ -1989,12 +2048,31 @@ This report summarizes the structure, completeness, uniqueness, and memory usage
 
 ## Sell Prices
 
+### Dataset Health
+
+- Quality score: **100/100**
+- Status: **Excellent**
+
 ### Dataset Summary
 
 - Rows: 6,841,121
 - Columns: 4
 - Duplicate rows: 0
 - Memory usage: 853.13 MB
+
+### Key Findings
+
+- No fully duplicated rows were detected.
+- No unexpected missing-value issues were identified.
+
+### Potential Issues
+
+- No major data-quality warnings were detected.
+
+### Recommended Actions
+
+- Consider converting `store_id` from `str` to category to reduce memory usage.
+- Consider converting `item_id` from `str` to category to reduce memory usage.
 
 ### Column Profile
 
