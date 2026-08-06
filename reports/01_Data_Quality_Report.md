@@ -24,7 +24,7 @@ This automated report evaluates the structure, completeness, uniqueness, memory 
 - Rows: 1,969
 - Columns: 14
 - Duplicate rows: 0
-- Memory usage: 0.67 MB
+- Memory usage: 0.26 MB
 
 ### Key Findings
 
@@ -91,7 +91,7 @@ This automated report evaluates the structure, completeness, uniqueness, memory 
 - Rows: 30,490
 - Columns: 1,919
 - Duplicate rows: 0
-- Memory usage: 455.38 MB
+- Memory usage: 448.23 MB
 
 ### Key Findings
 
@@ -2058,7 +2058,7 @@ This automated report evaluates the structure, completeness, uniqueness, memory 
 - Rows: 6,841,121
 - Columns: 4
 - Duplicate rows: 0
-- Memory usage: 853.13 MB
+- Memory usage: 318.15 MB
 
 ### Key Findings
 

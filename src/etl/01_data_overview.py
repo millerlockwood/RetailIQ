@@ -6,7 +6,7 @@ import pandas as pd
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DATA_DIR = PROJECT_ROOT / "data" / "raw"
 REPORTS_DIR = PROJECT_ROOT / "reports"
-REPORT_PATH = REPORTS_DIR / "Data_Quality_Report.md"
+REPORT_PATH = REPORTS_DIR / "01_Data_Quality_Report.md"
 
 
 DATASET_FILES = {
