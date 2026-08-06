@@ -1,66 +1,75 @@
 # RetailIQ
 
-RetailIQ is an end-to-end retail demand forecasting and inventory optimization platform.
+## Retail Demand Forecasting & Inventory Optimization Platform
 
-The project uses Python, SQL, machine learning, Power BI, and Streamlit to forecast product demand and convert those forecasts into inventory replenishment recommendations.
+RetailIQ is an end-to-end retail analytics platform built with Python, SQL, Power BI, and machine learning.
 
-## Business Problem
+The project simulates the type of analytics pipeline used by modern retail organizations to improve inventory planning, forecast demand, and support business decision-making.
 
-Retailers lose revenue when products are unavailable, but carrying too much inventory creates unnecessary storage costs and ties up working capital.
+---
 
-RetailIQ addresses the following question:
+## Current Features
 
-> How much of each product should each store order for the next 28 days to reduce stockouts while minimizing excess inventory costs?
+- Automated data profiling
+- Data validation engine
+- Data cleaning pipeline
+- Automated Markdown reporting
+- GitHub version control
+- Modular ETL architecture
 
-## Planned Capabilities
-
-- Automated Python data pipeline
-- Relational SQL data warehouse
-- Store-item demand forecasting
-- Forecast model comparison
-- Safety stock calculations
-- Reorder point calculations
-- Inventory order recommendations
-- Inventory policy simulation
-- Power BI executive dashboard
-- Streamlit decision-support application
+---
 
 ## Technology Stack
 
 - Python
 - Pandas
 - NumPy
-- SQL
-- MySQL
-- Scikit-learn
-- LightGBM
+- SQL (SQLite)
 - Power BI
-- Streamlit
-- Git
-- GitHub
+- Git & GitHub
+- Markdown
 
-## Project Architecture
+---
+
+## Project Structure
 
 ```text
-Raw Data
-   |
-   v
-Python ETL Pipeline
-   |
-   v
-SQL Data Warehouse
-   |
-   v
-Feature Engineering
-   |
-   v
-Demand Forecasting
-   |
-   v
-Inventory Optimization
-   |
-   v
-Business Simulation
-   |
-   v
-Power BI and Streamlit
+RetailIQ/
+
+docs/
+reports/
+src/
+data/
+sql/
+dashboard/
+```
+
+---
+
+## Reports
+
+- 01_Data_Quality_Report.md
+- 02_Validation_Report.md
+- 03_Cleaning_Report.md
+
+---
+
+## Current Development Roadmap
+
+- ✅ Project Setup
+- ✅ Data Profiling
+- ✅ Data Validation
+- ✅ Data Cleaning
+- ⏳ SQL Warehouse
+- ⏳ Exploratory Data Analysis
+- ⏳ Feature Engineering
+- ⏳ Demand Forecasting
+- ⏳ Inventory Optimization
+- ⏳ Power BI Dashboard
+- ⏳ Streamlit Application
+
+---
+
+## Author
+
+Miller Lockwood
