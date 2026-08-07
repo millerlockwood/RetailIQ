@@ -192,6 +192,21 @@ The detailed performance page includes:
 The store performance analysis compares total sales volume with average daily sales to identify differences in performance across locations.
 
 ---
+## Dashboard Preview
+
+### Executive Dashboard
+
+The executive dashboard provides a high-level overview of sales performance, store performance, product demand, and regional trends.
+
+![RetailIQ Executive Dashboard](dashboard/screenshots/executive_dashboard.png)
+
+### Store & Product Performance
+
+The detailed analytics dashboard provides deeper analysis of store performance, product demand, average daily sales, and category sales mix.
+
+![RetailIQ Store and Product Performance](dashboard/screenshots/store_product_performance.png)
+
+---
 
 ## Key Business Insights
 
