@@ -37,3 +37,7 @@ __pycache__/
 # Analytics outputs
 reports/query_results/
 reports/executive_kpis.csv
+
+# Forecasting generated data and models
+data/forecasting/*.parquet
+data/forecasting/*.joblib

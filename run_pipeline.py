@@ -10,23 +10,148 @@ import time
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
-ETL_DIR = PROJECT_ROOT / "src" / "etl"
-
 
 # ==========================================================
 # PIPELINE STAGES
 # ==========================================================
 
 PIPELINE_STAGES = [
-    ("01", "Data Profiling", "01_data_overview.py"),
-    ("02", "Data Validation", "02_data_validation.py"),
-    ("03", "Data Cleaning", "03_data_cleaning.py"),
-    ("04", "Sales Transformation", "04_transform_sales.py"),
-    ("05", "Database Build", "05_build_database.py"),
-    ("06", "Database Load", "06_load_database.py"),
-    ("07", "Index Creation", "07_create_indexes.py"),
-    ("08", "View Creation", "08_create_views.py"),
-    ("09", "Summary Table Creation", "09_create_summary_tables.py"),
+
+    # ------------------------------------------------------
+    # DATA ENGINEERING
+    # ------------------------------------------------------
+
+    (
+        "01",
+        "Data Profiling",
+        "src/etl/01_data_overview.py",
+    ),
+
+    (
+        "02",
+        "Data Validation",
+        "src/etl/02_data_validation.py",
+    ),
+
+    (
+        "03",
+        "Data Cleaning",
+        "src/etl/03_data_cleaning.py",
+    ),
+
+    (
+        "04",
+        "Sales Transformation",
+        "src/etl/04_transform_sales.py",
+    ),
+
+    (
+        "05",
+        "Database Build",
+        "src/etl/05_build_database.py",
+    ),
+
+    (
+        "06",
+        "Database Load",
+        "src/etl/06_load_database.py",
+    ),
+
+    (
+        "07",
+        "Index Creation",
+        "src/etl/07_create_indexes.py",
+    ),
+
+    (
+        "08",
+        "View Creation",
+        "src/etl/08_create_views.py",
+    ),
+
+    (
+        "09",
+        "Summary Table Creation",
+        "src/etl/09_create_summary_tables.py",
+    ),
+
+    # ------------------------------------------------------
+    # BUSINESS ANALYTICS
+    # ------------------------------------------------------
+
+    (
+        "10",
+        "SQL Business Analysis",
+        "src/analytics/01_run_sql_analysis.py",
+    ),
+
+    (
+        "11",
+        "Executive KPI Generation",
+        "src/analytics/02_generate_kpis.py",
+    ),
+
+    (
+        "12",
+        "Dashboard Data Export",
+        "src/analytics/03_dashboard_export.py",
+    ),
+
+    # ------------------------------------------------------
+    # DEMAND FORECASTING
+    # ------------------------------------------------------
+
+    (
+        "13",
+        "Forecast Data Preparation",
+        "src/forecasting/01_prepare_forecasting_data.py",
+    ),
+
+    (
+        "14",
+        "Baseline Forecast",
+        "src/forecasting/02_baseline_forecast.py",
+    ),
+
+    (
+        "15",
+        "Machine Learning Demand Model",
+        "src/forecasting/03_demand_model.py",
+    ),
+
+    (
+        "16",
+        "Forecast Visualization",
+        "src/forecasting/04_forecast_visualization.py",
+    ),
+
+    (
+        "17",
+        "Future Demand Forecast",
+        "src/forecasting/05_future_forecast.py",
+    ),
+
+    # ------------------------------------------------------
+    # INVENTORY OPTIMIZATION
+    # ------------------------------------------------------
+
+    (
+        "18",
+        "Baseline Inventory Policy",
+        "src/inventory/01_inventory_recommendations.py",
+    ),
+
+    (
+        "19",
+        "Optimized Inventory Model",
+        "src/inventory/02_optimized_inventory.py",
+    ),
+
+    (
+        "20",
+        "Inventory Visualization",
+        "src/inventory/03_inventory_visualization.py",
+    ),
 ]
 
 
@@ -37,11 +162,18 @@ PIPELINE_STAGES = [
 def run_stage(
     stage_number: str,
     stage_name: str,
-    script_name: str,
+    relative_script_path: str,
 ) -> float:
-    """Run one RetailIQ pipeline stage."""
+    """
+    Run one RetailIQ pipeline stage.
 
-    script_path = ETL_DIR / script_name
+    The pipeline stops immediately if any stage fails.
+    """
+
+    script_path = (
+        PROJECT_ROOT
+        / relative_script_path
+    )
 
     if not script_path.exists():
         raise FileNotFoundError(
@@ -49,10 +181,17 @@ def run_stage(
         )
 
     print("\n" + "=" * 70)
+
     print(
-        f"STAGE {stage_number}: {stage_name.upper()}"
+        f"STAGE {stage_number}: "
+        f"{stage_name.upper()}"
     )
+
     print("=" * 70)
+
+    print(
+        f"Script: {relative_script_path}"
+    )
 
     start_time = time.time()
 
@@ -64,17 +203,21 @@ def run_stage(
         cwd=PROJECT_ROOT,
     )
 
-    elapsed = time.time() - start_time
+    elapsed = (
+        time.time()
+        - start_time
+    )
 
     if result.returncode != 0:
+
         print(
             f"\n❌ Stage {stage_number} failed: "
             f"{stage_name}"
         )
 
         raise RuntimeError(
-            "RetailIQ pipeline stopped because "
-            "a stage failed."
+            f"RetailIQ pipeline stopped at "
+            f"Stage {stage_number}: {stage_name}"
         )
 
     print(
@@ -90,20 +233,33 @@ def run_stage(
 # ==========================================================
 
 def main() -> None:
-    """Run the complete RetailIQ pipeline."""
+    """
+    Run the complete RetailIQ analytics pipeline.
+    """
 
     print("=" * 70)
-    print("RETAILIQ END-TO-END DATA PIPELINE")
+    print("RETAILIQ END-TO-END ANALYTICS PIPELINE")
     print("=" * 70)
 
     print(
-        "\nStages scheduled:"
+        "\nPipeline stages:"
     )
 
-    for number, name, _ in PIPELINE_STAGES:
+    for (
+        stage_number,
+        stage_name,
+        _,
+    ) in PIPELINE_STAGES:
+
         print(
-            f"  {number}. {name}"
+            f"  {stage_number}. "
+            f"{stage_name}"
         )
+
+    print(
+        f"\nTotal stages: "
+        f"{len(PIPELINE_STAGES)}"
+    )
 
     pipeline_start = time.time()
 
@@ -114,13 +270,13 @@ def main() -> None:
         for (
             stage_number,
             stage_name,
-            script_name,
+            script_path,
         ) in PIPELINE_STAGES:
 
             elapsed = run_stage(
                 stage_number,
                 stage_name,
-                script_name,
+                script_path,
             )
 
             stage_times.append(
@@ -141,11 +297,20 @@ def main() -> None:
             f"\nError: {error}"
         )
 
+        print(
+            "\nAll remaining stages were skipped."
+        )
+
         sys.exit(1)
 
     total_elapsed = (
-        time.time() - pipeline_start
+        time.time()
+        - pipeline_start
     )
+
+    # ------------------------------------------------------
+    # FINAL SUMMARY
+    # ------------------------------------------------------
 
     print("\n" + "=" * 70)
     print("RETAILIQ PIPELINE COMPLETE")
@@ -161,9 +326,9 @@ def main() -> None:
     ) in stage_times:
 
         print(
-            f"{stage_number} "
-            f"{stage_name:<30} "
-            f"{elapsed:>8.2f} sec"
+            f"{stage_number}  "
+            f"{stage_name:<35}"
+            f"{elapsed:>10.2f} sec"
         )
 
     print("-" * 70)
@@ -174,7 +339,31 @@ def main() -> None:
     )
 
     print(
-        "\n✅ RetailIQ is ready for analytics."
+        "\n✅ Data engineering complete."
+    )
+
+    print(
+        "✅ Analytics outputs generated."
+    )
+
+    print(
+        "✅ Dashboard datasets generated."
+    )
+
+    print(
+        "✅ Demand forecasting complete."
+    )
+
+    print(
+        "✅ Future demand forecast generated."
+    )
+
+    print(
+        "✅ Inventory recommendations generated."
+    )
+
+    print(
+        "\nRetailIQ is ready for business decision support."
     )
 
 

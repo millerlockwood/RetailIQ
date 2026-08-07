@@ -1,0 +1,3 @@
+Model,MAE,MAPE
+Seasonal Baseline,3438.64,13.88
+Random Forest,1606.87,8.22
