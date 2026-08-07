@@ -1,9 +1,2 @@
-KPI,Value
-Total Units Sold,66927173
-Number of Products,3049
-Number of Stores,10
-Number of States,3
-Top Store,CA_3
-Top State,CA
-Top Product,FOODS_3_090
-Top Category,FOODS
+Total Units Sold,Number of Products,Number of Stores,Number of States,Top Store,Top State,Top Product,Top Category
+66927173,3049,10,3,CA_3,CA,FOODS_3_090,FOODS

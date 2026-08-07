@@ -10,16 +10,19 @@ DATABASE_PATH = PROJECT_ROOT / "database" / "RetailIQ.db"
 
 SUMMARY_QUERIES = {
     "summary_store_sales": """
-        DROP TABLE IF EXISTS summary_store_sales;
+    DROP TABLE IF EXISTS summary_store_sales;
 
-        CREATE TABLE summary_store_sales AS
-        SELECT
-            store_id,
-            SUM(sales) AS total_units_sold,
-            AVG(sales) AS average_daily_sales
-        FROM fact_daily_sales
-        GROUP BY store_id;
-    """,
+    CREATE TABLE summary_store_sales AS
+    SELECT
+        store_id,
+        SUM(sales) AS total_units_sold,
+        ROUND(
+            SUM(sales) * 1.0 / COUNT(DISTINCT date),
+            2
+        ) AS average_daily_sales
+    FROM fact_daily_sales
+    GROUP BY store_id;
+""",
 
     "summary_state_sales": """
         DROP TABLE IF EXISTS summary_state_sales;
@@ -140,4 +143,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    main()     

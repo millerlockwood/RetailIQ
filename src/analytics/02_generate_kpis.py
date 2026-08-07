@@ -1,149 +1,115 @@
 from pathlib import Path
 import sqlite3
 import pandas as pd
-import time
-
-
-# ==========================================================
-# PATHS
-# ==========================================================
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 DATABASE_PATH = PROJECT_ROOT / "database" / "RetailIQ.db"
 
-OUTPUT_DIR = PROJECT_ROOT / "reports"
-
-OUTPUT_DIR.mkdir(
-    parents=True,
-    exist_ok=True,
-)
+OUTPUT_PATH = PROJECT_ROOT / "reports" / "executive_kpis.csv"
 
 
-# ==========================================================
-# KPI QUERIES
-# ==========================================================
+def query_value(connection, sql):
+    return pd.read_sql_query(sql, connection).iloc[0, 0]
 
-KPI_QUERIES = {
-
-    "Total Units Sold": """
-        SELECT
-            SUM(total_units_sold)
-        FROM summary_store_sales;
-    """,
-
-    "Number of Products": """
-        SELECT
-            COUNT(*)
-        FROM dim_product;
-    """,
-
-    "Number of Stores": """
-        SELECT
-            COUNT(*)
-        FROM dim_store;
-    """,
-
-    "Number of States": """
-        SELECT
-            COUNT(DISTINCT state_id)
-        FROM dim_store;
-    """,
-
-    "Top Store": """
-        SELECT
-            store_id
-        FROM summary_store_sales
-        ORDER BY total_units_sold DESC
-        LIMIT 1;
-    """,
-
-    "Top State": """
-        SELECT
-            state_id
-        FROM summary_state_sales
-        ORDER BY total_units_sold DESC
-        LIMIT 1;
-    """,
-
-    "Top Product": """
-        SELECT
-            item_id
-        FROM summary_product_sales
-        ORDER BY total_units_sold DESC
-        LIMIT 1;
-    """,
-
-    "Top Category": """
-        SELECT
-            cat_id
-        FROM summary_category_sales
-        ORDER BY total_units_sold DESC
-        LIMIT 1;
-    """
-}
-
-
-# ==========================================================
-# MAIN
-# ==========================================================
 
 def main():
 
-    print("=" * 60)
-    print("RETAILIQ EXECUTIVE KPI ENGINE")
-    print("=" * 60)
+    connection = sqlite3.connect(DATABASE_PATH)
 
-    start = time.time()
+    data = {
 
-    connection = sqlite3.connect(
-        DATABASE_PATH
-    )
+        "Total Units Sold":
+            query_value(
+                connection,
+                """
+                SELECT SUM(total_units_sold)
+                FROM summary_store_sales;
+                """
+            ),
 
-    kpis = []
+        "Number of Products":
+            query_value(
+                connection,
+                """
+                SELECT COUNT(*)
+                FROM dim_product;
+                """
+            ),
 
-    for (
-        kpi_name,
-        sql,
-    ) in KPI_QUERIES.items():
+        "Number of Stores":
+            query_value(
+                connection,
+                """
+                SELECT COUNT(*)
+                FROM dim_store;
+                """
+            ),
 
-        value = pd.read_sql_query(
-            sql,
-            connection,
-        ).iloc[0, 0]
+        "Number of States":
+            query_value(
+                connection,
+                """
+                SELECT COUNT(DISTINCT state_id)
+                FROM dim_store;
+                """
+            ),
 
-        # Make large numbers easier to read
-        if isinstance(value, float):
-            value = round(value, 2)
+        "Top Store":
+            query_value(
+                connection,
+                """
+                SELECT store_id
+                FROM summary_store_sales
+                ORDER BY total_units_sold DESC
+                LIMIT 1;
+                """
+            ),
 
-        kpis.append(
-            {
-                "KPI": kpi_name,
-                "Value": value,
-            }
-        )
+        "Top State":
+            query_value(
+                connection,
+                """
+                SELECT state_id
+                FROM summary_state_sales
+                ORDER BY total_units_sold DESC
+                LIMIT 1;
+                """
+            ),
 
-        print(f"{kpi_name}: {value}")
+        "Top Product":
+            query_value(
+                connection,
+                """
+                SELECT item_id
+                FROM summary_product_sales
+                ORDER BY total_units_sold DESC
+                LIMIT 1;
+                """
+            ),
+
+        "Top Category":
+            query_value(
+                connection,
+                """
+                SELECT cat_id
+                FROM summary_category_sales
+                ORDER BY total_units_sold DESC
+                LIMIT 1;
+                """
+            ),
+    }
 
     connection.close()
 
-    dataframe = pd.DataFrame(kpis)
-
-    output_file = (
-        OUTPUT_DIR
-        / "executive_kpis.csv"
-    )
+    dataframe = pd.DataFrame([data])
 
     dataframe.to_csv(
-        output_file,
+        OUTPUT_PATH,
         index=False,
     )
 
-    elapsed = time.time() - start
-
-    print("\nSaved -> executive_kpis.csv")
-
-    print(f"\nCompleted in {elapsed:.2f} seconds")
+    print(dataframe)
 
 
 if __name__ == "__main__":

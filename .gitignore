@@ -32,3 +32,8 @@ data/processed/
 # Python cache
 __pycache__/
 *.pyc
+
+
+# Analytics outputs
+reports/query_results/
+reports/executive_kpis.csv
